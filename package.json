@@ -1,0 +1,22 @@
+{
+  "name": "anydoor",
+  "version": "1.0.0",
+  "description": "不好意思，我有任意门",
+  "main": "./src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuduanyang/anydoor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liuduanyang/anydoor/issues"
+  },
+  "homepage": "https://github.com/liuduanyang/anydoor#readme",
+  "dependencies": {
+    "chalk": "2.3.0"
+  }
+}
