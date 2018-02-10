@@ -7,6 +7,9 @@ const config=require('../config/defaultConfig');
 // 为什么使用同步方法：1.下面代码依赖于这个文件  2.应对不同请求source只需获取一次 因为node缓存机制
 const source=fs.readFileSync(path.join(__dirname,'../template/dir.tpl'),'utf-8');
 
+// 引用 mime.js
+const mime=require('./mime');
+
 // Handlebars编译模板引擎文件
 const template=Handlebars.compile(source); // compile 接收字符串类型的参数
 
@@ -21,8 +24,9 @@ module.exports =async function(req,res,filePath){
         if(stats.isFile()){
             fs.createReadStream(filePath).pipe(res);
             // 不要加res.end() 上一行是异步的 res.end是同步的 这样会导致应用立即发送过去 即发送的内容为空
+            const contentType=mime(filePath);
             res.statusCode=200;
-            res.setHeader('Content-Type','text/plant;charset=utf-8');
+            res.setHeader('Content-Type',contentType+';charset=utf-8');
         }
         else if(stats.isDirectory()){
             try {   // 这里try catch可不写 但不写则不够严谨 即不写时则默认内部读文件不会出错
