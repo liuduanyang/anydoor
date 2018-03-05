@@ -5,6 +5,7 @@ const Handlebars=require('handlebars');
 const path=require('path');
 const config=require('../config/defaultConfig');
 const compress=require('./compress');
+const range=require('./range');
 
 // 获取模板引擎 
 // 为什么使用同步方法：1.下面代码依赖于这个文件  2.应对不同请求source只需获取一次 因为node缓存机制
@@ -27,8 +28,14 @@ module.exports =async function(req,res,filePath){
         if(stats.isFile()){
             // fs.createReadStream(filePath).pipe(res);
             // 不要加res.end() 上一行是异步的 res.end是同步的 这样会导致应用立即发送过去 即发送的内容为空
-            
-            let rs=fs.createReadStream(filePath);
+            let rs;
+            const {code,start,end}=range(stats.size,req,res);
+            if(code===200){
+                rs=fs.createReadStream(filePath);
+            }else{
+                res.statusCode=206;
+                rs.createReadStream(filePath,{start,end});
+            }
             if(filePath.match(config.compress)){
                 rs=compress(rs,req,res);
             }
